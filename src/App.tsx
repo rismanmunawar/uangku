@@ -25,8 +25,8 @@ function Protected() {
 
 function Shell() {
   return (
-    <div className="mx-auto min-h-screen max-w-lg bg-transparent">
-      <div className="pb-20 pt-2">
+    <div className="app-shell mx-auto max-w-lg min-h-screen min-h-[100dvh] bg-transparent">
+      <div className="pb-[calc(var(--safe-area-bottom)+6rem)] pt-2">
         <Outlet />
       </div>
       <BottomNav />

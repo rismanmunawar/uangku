@@ -135,57 +135,63 @@ export default function Home() {
         <p className="mt-3 text-sm text-white/80">
           Track income, expense, dan transfer di semua akun.
         </p>
-        <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
-          <div className="rounded-2xl bg-white/15 p-3">
-            <div className="text-white/80">Income</div>
-            <div className="text-lg font-semibold">
-              {totals.income.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
+        <div className="mt-4 space-y-3 text-sm">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-white/15 p-3">
+              <div className="text-white/80">Income</div>
+              <div className="text-lg font-semibold leading-tight break-words">
+                {totals.income.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </div>
+            </div>
+            <div className="rounded-2xl bg-white/15 p-3">
+              <div className="text-white/80">Expense</div>
+              <div className="text-lg font-semibold leading-tight break-words">
+                {totals.expense.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </div>
             </div>
           </div>
-          <div className="rounded-2xl bg-white/15 p-3">
-            <div className="text-white/80">Expense</div>
-            <div className="text-lg font-semibold">
-              {totals.expense.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
+
+          <div className="grid grid-cols-1">
+            <div className="rounded-2xl bg-white/15 p-3">
+              <div className="text-white/80">Net</div>
+              <div className="text-lg font-semibold leading-tight break-words">
+                {totals.net.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </div>
             </div>
           </div>
-          <div className="rounded-2xl bg-white/15 p-3">
-            <div className="text-white/80">Net</div>
-            <div className="text-lg font-semibold">
-              {totals.net.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-white/15 p-3">
+              <div className="text-white/80">Spendable</div>
+              <div className="text-lg font-semibold leading-tight break-words">
+                {spendableTotal.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl bg-white/15 p-3">
-            <div className="text-white/80">Spendable</div>
-            <div className="text-lg font-semibold">
-              {spendableTotal.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
-            </div>
-          </div>
-          <div className="rounded-2xl bg-white/15 p-3">
-            <div className="text-white/80">Savings</div>
-            <div className="text-lg font-semibold">
-              {savingsTotal.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0,
-              })}
+            <div className="rounded-2xl bg-white/15 p-3">
+              <div className="text-white/80">Savings</div>
+              <div className="text-lg font-semibold leading-tight break-words">
+                {savingsTotal.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </div>
             </div>
           </div>
         </div>

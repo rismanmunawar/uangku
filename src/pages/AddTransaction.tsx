@@ -18,7 +18,7 @@ export default function AddTransaction() {
   const [note, setNote] = useState("");
   const [fromAccount, setFromAccount] = useState("");
   const [toAccount, setToAccount] = useState("");
-  const [adminFee, setAdminFee] = useState("0");
+  const [adminFee, setAdminFee] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export default function AddTransaction() {
     setAmount("");
     setCategory("General");
     setNote("");
-    setAdminFee("0");
+    setAdminFee("");
     setAccountId(first);
     setFromAccount(first);
     setToAccount(second && second !== first ? second : "");
@@ -69,12 +69,10 @@ export default function AddTransaction() {
         if (!fromAccount || !toAccount || fromAccount === toAccount) {
           throw new Error("Choose two different accounts");
         }
-        const admin = Number(adminFee) || 0;
         const { error: insertError } = await supabase.from("transfers").insert({
           user_id: user.id,
           date,
           amount: parsedAmount,
-          admin_fee: admin,
           from_account_id: fromAccount,
           to_account_id: toAccount,
           note: note || null,
@@ -173,11 +171,11 @@ export default function AddTransaction() {
               inputMode="decimal"
               value={adminFee}
               onChange={(e) => setAdminFee(e.target.value)}
-              placeholder="0"
+              placeholder="0 (optional)"
               className="w-full rounded-xl border border-slate-200 px-3 py-3"
             />
             <p className="text-[11px] text-slate-500">
-              Fee will be deducted from the source account.
+              Optional. Only fill if the source bank charges an admin fee.
             </p>
           </div>
         </>
@@ -273,7 +271,9 @@ export default function AddTransaction() {
             }`}
             type="button"
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab === "transfer"
+              ? "Mutation"
+              : tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>

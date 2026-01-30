@@ -5,14 +5,16 @@ import { useAuth } from "../context/AuthContext";
 import { getTotalsForMonth } from "../utils/balance";
 import type { Transaction } from "../types";
 
-function buildSparkline(points: { day: string; net: number }[], width = 320, height = 120) {
+function buildSparkline(points: { day: string; value: number }[], width = 320, height = 120) {
   if (points.length === 0) return "";
-  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.net)));
+  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.value)));
   const step = width / Math.max(points.length - 1, 1);
-  return points
+  // for single point, duplicate to make a flat line visible
+  const normalized = points.length === 1 ? [...points, { ...points[0], day: points[0].day + "_dup" }] : points;
+  return normalized
     .map((p, idx) => {
       const x = idx * step;
-      const y = height / 2 - (p.net / maxAbs) * (height / 2 - 10);
+      const y = height / 2 - (p.value / maxAbs) * (height / 2 - 12);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(" ");
@@ -49,20 +51,29 @@ export default function StatementPage() {
 
   const totals = useMemo(() => getTotalsForMonth(transactions, selectedMonth), [transactions, selectedMonth]);
 
-  const sparkPoints = useMemo(() => {
-    const dayMap: Record<string, number> = {};
+  const { incomePoints, expensePoints, netPoints } = useMemo(() => {
+    const dayIncome: Record<string, number> = {};
+    const dayExpense: Record<string, number> = {};
     transactions
       .filter((t) => t.date.startsWith(selectedMonth))
       .forEach((t) => {
         const day = t.date.slice(8, 10);
-        dayMap[day] = (dayMap[day] ?? 0) + (t.type === "income" ? t.amount : -t.amount);
+        if (t.type === "income") {
+          dayIncome[day] = (dayIncome[day] ?? 0) + t.amount;
+        } else {
+          dayExpense[day] = (dayExpense[day] ?? 0) + t.amount;
+        }
       });
-    return Object.keys(dayMap)
-      .sort()
-      .map((day) => ({ day, net: dayMap[day] }));
+    const days = Array.from(new Set([...Object.keys(dayIncome), ...Object.keys(dayExpense)])).sort();
+    const incomePts = days.map((d) => ({ day: d, value: dayIncome[d] ?? 0 }));
+    const expensePts = days.map((d) => ({ day: d, value: -(dayExpense[d] ?? 0) }));
+    const netPts = days.map((d) => ({ day: d, value: (dayIncome[d] ?? 0) - (dayExpense[d] ?? 0) }));
+    return { incomePoints: incomePts, expensePoints: expensePts, netPoints: netPts };
   }, [transactions, selectedMonth]);
 
-  const polyline = buildSparkline(sparkPoints);
+  const incomeLine = buildSparkline(incomePoints);
+  const expenseLine = buildSparkline(expensePoints);
+  const netLine = buildSparkline(netPoints);
 
   return (
     <div className="space-y-4 p-4 pb-24">
@@ -101,20 +112,48 @@ export default function StatementPage() {
         </div>
 
         <div className="overflow-hidden rounded-xl bg-gradient-to-b from-sky-100 to-white p-3 ring-1 ring-sky-200/60">
-          {sparkPoints.length === 0 ? (
+          {netPoints.length === 0 ? (
             <div className="py-6 text-center text-sm text-slate-500">No data for this month.</div>
           ) : (
             <svg viewBox="0 0 320 120" className="h-28 w-full text-sky-500">
               <polyline
                 fill="none"
-                stroke="currentColor"
+                stroke="#10b981"
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                points={polyline}
+                points={incomeLine}
+              />
+              <polyline
+                fill="none"
+                stroke="#f43f5e"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                points={expenseLine}
+              />
+              <polyline
+                fill="none"
+                stroke="#0ea5e9"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="4 4"
+                points={netLine}
               />
             </svg>
           )}
+        </div>
+        <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-600">
+          <span className="inline-flex items-center gap-1">
+            <span className="h-2 w-4 rounded-full bg-emerald-500"></span> Income
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="h-2 w-4 rounded-full bg-rose-500"></span> Expense
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="h-2 w-4 rounded-full bg-sky-500"></span> Net
+          </span>
         </div>
       </div>
 

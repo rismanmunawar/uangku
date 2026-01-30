@@ -5,19 +5,24 @@ import { useAuth } from "../context/AuthContext";
 import { getTotalsForMonth } from "../utils/balance";
 import type { Transaction } from "../types";
 
-function buildSparkline(points: { day: string; value: number }[], width = 320, height = 120) {
-  if (points.length === 0) return "";
-  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.value)));
-  const step = width / Math.max(points.length - 1, 1);
-  // for single point, duplicate to make a flat line visible
+type Point = { day: string; value: number };
+
+function buildLine(points: Point[], maxAbs: number, width = 320, height = 120) {
+  if (points.length === 0) return { poly: "", markers: [] as { x: number; y: number }[] };
+  const padding = 12;
+  const innerW = width - padding * 2;
+  const innerH = height - padding * 2;
   const normalized = points.length === 1 ? [...points, { ...points[0], day: points[0].day + "_dup" }] : points;
-  return normalized
-    .map((p, idx) => {
-      const x = idx * step;
-      const y = height / 2 - (p.value / maxAbs) * (height / 2 - 12);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
+  const step = normalized.length > 1 ? innerW / (normalized.length - 1) : 0;
+  const coords = normalized.map((p, idx) => {
+    const x = padding + idx * step;
+    const y = padding + innerH / 2 - (p.value / Math.max(1, maxAbs)) * (innerH / 2);
+    return { x, y };
+  });
+  return {
+    poly: coords.map((c) => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(" "),
+    markers: coords,
+  };
 }
 
 export default function StatementPage() {
@@ -51,7 +56,7 @@ export default function StatementPage() {
 
   const totals = useMemo(() => getTotalsForMonth(transactions, selectedMonth), [transactions, selectedMonth]);
 
-  const { incomePoints, expensePoints, netPoints } = useMemo(() => {
+  const { incomePoints, expensePoints, netPoints, maxAbs } = useMemo(() => {
     const dayIncome: Record<string, number> = {};
     const dayExpense: Record<string, number> = {};
     transactions
@@ -68,12 +73,13 @@ export default function StatementPage() {
     const incomePts = days.map((d) => ({ day: d, value: dayIncome[d] ?? 0 }));
     const expensePts = days.map((d) => ({ day: d, value: -(dayExpense[d] ?? 0) }));
     const netPts = days.map((d) => ({ day: d, value: (dayIncome[d] ?? 0) - (dayExpense[d] ?? 0) }));
-    return { incomePoints: incomePts, expensePoints: expensePts, netPoints: netPts };
+    const allVals = [...incomePts, ...expensePts, ...netPts].map((p) => Math.abs(p.value));
+    return { incomePoints: incomePts, expensePoints: expensePts, netPoints: netPts, maxAbs: Math.max(1, ...allVals) };
   }, [transactions, selectedMonth]);
 
-  const incomeLine = buildSparkline(incomePoints);
-  const expenseLine = buildSparkline(expensePoints);
-  const netLine = buildSparkline(netPoints);
+  const incomeLine = buildLine(incomePoints, maxAbs);
+  const expenseLine = buildLine(expensePoints, maxAbs);
+  const netLine = buildLine(netPoints, maxAbs);
 
   return (
     <div className="space-y-4 p-4 pb-24">
@@ -122,7 +128,7 @@ export default function StatementPage() {
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                points={incomeLine}
+                points={incomeLine.poly}
               />
               <polyline
                 fill="none"
@@ -130,7 +136,7 @@ export default function StatementPage() {
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                points={expenseLine}
+                points={expenseLine.poly}
               />
               <polyline
                 fill="none"
@@ -139,8 +145,17 @@ export default function StatementPage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray="4 4"
-                points={netLine}
+                points={netLine.poly}
               />
+              {incomeLine.markers.map((m, idx) => (
+                <circle key={`i-${idx}`} cx={m.x} cy={m.y} r={3} fill="#10b981" stroke="white" strokeWidth="1" />
+              ))}
+              {expenseLine.markers.map((m, idx) => (
+                <circle key={`e-${idx}`} cx={m.x} cy={m.y} r={3} fill="#f43f5e" stroke="white" strokeWidth="1" />
+              ))}
+              {netLine.markers.map((m, idx) => (
+                <circle key={`n-${idx}`} cx={m.x} cy={m.y} r={3} fill="#0ea5e9" stroke="white" strokeWidth="1" />
+              ))}
             </svg>
           )}
         </div>

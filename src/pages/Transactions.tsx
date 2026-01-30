@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+﻿import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { supabase } from "../lib/supabase";
 import type { Account, Transaction, Transfer } from "../types";
 import { TransactionItem } from "../components/TransactionItem";
@@ -138,7 +138,7 @@ export default function TransactionsPage() {
       return;
     }
     if (!editDraft.password) {
-      setModalError("Masukkan password untuk konfirmasi.");
+      setModalError("Please enter your password to confirm.");
       return;
     }
     setSaving(true);
@@ -246,7 +246,7 @@ export default function TransactionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Detail Transaksi
+                  Transaction Details
                 </div>
                 <div className="text-lg font-bold text-slate-900">
                   {selected.item.type === "income" ? "Income" : "Expense"}
@@ -262,7 +262,7 @@ export default function TransactionsPage() {
 
             {!editing && (
               <div className="space-y-2 text-sm text-slate-700">
-                <div className="flex justify-between"><span>Tanggal</span><span>{selected.item.date}</span></div>
+                <div className="flex justify-between"><span>Date</span><span>{selected.item.date}</span></div>
                 <div className="flex justify-between"><span>Amount</span><span>
                   {selected.item.amount.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
                 </span></div>
@@ -287,7 +287,7 @@ export default function TransactionsPage() {
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-slate-600">Tanggal</label>
+                    <label className="text-xs text-slate-600">Date</label>
                     <input
                       type="date"
                       value={editDraft.date}
@@ -336,23 +336,23 @@ export default function TransactionsPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-600">Konfirmasi Password</label>
+                  <label className="text-xs text-slate-600">Password Confirmation</label>
                   <input
                     type="password"
                     value={editDraft.password ?? ""}
                     onChange={(e) => setEditDraft((d) => ({ ...d, password: e.target.value }))}
                     className="w-full rounded-xl border border-slate-200 px-3 py-2"
-                    placeholder="Password akun"
+                    placeholder="Account password"
                   />
                 </div>
                 {modalError && <div className="text-sm text-rose-600">{modalError}</div>}
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <button
                     type="button"
                     onClick={() => { setEditing(false); setModalError(null); }}
                     className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100"
                   >
-                    Batal
+                    Cancel
                   </button>
                   <button
                     type="button"
@@ -368,7 +368,7 @@ export default function TransactionsPage() {
           </div>
         )}
         {selected?.kind !== "transaction" && (
-          <div className="text-sm text-slate-600">Edit hanya untuk transaksi (bukan transfer).</div>
+          <div className="text-sm text-slate-600">Editing is available for transactions (not transfers).</div>
         )}
       </Modal>
     </div>
@@ -386,14 +386,14 @@ function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-[1px] p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[1px] p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-4 shadow-xl">
         <div className="flex justify-end">
           <button
             onClick={onClose}
             className="rounded-full px-2 py-1 text-sm font-semibold text-slate-500 hover:bg-slate-100"
           >
-            ×
+            x
           </button>
         </div>
         {children}
@@ -401,3 +401,6 @@ function Modal({
     </div>
   );
 }
+
+
+

@@ -1,25 +1,25 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const menuItems = [
   {
     title: "Profile",
-    desc: "Email, nama tampilan, password",
+    desc: "Email, display name, password",
     to: "/settings/profile",
   },
   {
-    title: "Account Rekening",
-    desc: "Kelola rekening/tabungan Anda",
+    title: "Accounts",
+    desc: "Manage your accounts",
     to: "/settings/accounts",
   },
   {
     title: "Data",
-    desc: "Export transaksi & master data",
+    desc: "Export transactions & master data",
     to: "/settings/data",
   },
   {
     title: "Logout",
-    desc: "Keluar dari sesi",
+    desc: "Sign out of the session",
     to: "/settings/logout",
   },
 ];
@@ -62,3 +62,5 @@ export default function Settings() {
   </div>
 );
 }
+
+

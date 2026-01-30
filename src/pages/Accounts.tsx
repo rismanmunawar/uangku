@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import type { Account } from "../types";
 import { useAuth } from "../context/AuthContext";
@@ -88,19 +88,19 @@ export default function AccountsPage() {
             className="float-right text-xs font-semibold text-slate-500"
             onClick={() => setToast(null)}
           >
-            ✕
+            x
           </button>
         </div>
       )}
       <header className="text-base font-semibold text-slate-900">
-        Account Rekening
+        Accounts
       </header>
       <div className="rounded-2xl bg-white p-4 shadow-sm space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nama rekening"
+            placeholder="Account name"
             className="rounded-xl border border-slate-200 px-3 py-3"
           />
           <select
@@ -126,7 +126,7 @@ export default function AccountsPage() {
             inputMode="decimal"
             value={openingBalance}
             onChange={(e) => setOpeningBalance(e.target.value)}
-            placeholder="Saldo awal"
+            placeholder="Opening balance"
             className="rounded-xl border border-slate-200 px-3 py-3"
           />
         </div>
@@ -166,7 +166,7 @@ export default function AccountsPage() {
       </div>
 
       <div className="rounded-2xl bg-white p-3 shadow-sm">
-        <div className="text-sm font-semibold text-slate-900 mb-2">Daftar rekening</div>
+        <div className="text-sm font-semibold text-slate-900 mb-2">Accounts</div>
         <ul className="space-y-2 text-sm text-slate-700">
           {accounts.map((acc) => (
             <li
@@ -201,11 +201,13 @@ export default function AccountsPage() {
             </li>
           ))}
           {accounts.length === 0 && (
-            <li className="text-slate-500">Belum ada rekening.</li>
+            <li className="text-slate-500">No accounts yet.</li>
           )}
         </ul>
       </div>
     </div>
   );
 }
+
+
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import type { Account, Transaction, Transfer } from "../types";
@@ -133,7 +133,7 @@ export default function Home() {
           </div>
         </div>
         <p className="mt-3 text-sm text-white/80">
-          Track income, expense, dan transfer di semua akun.
+          Track income, expense, and transfers across all accounts.
         </p>
         <div className="mt-4 space-y-3 text-sm">
           <div className="grid grid-cols-2 gap-3">
@@ -264,3 +264,4 @@ export default function Home() {
     </div>
   );
 }
+

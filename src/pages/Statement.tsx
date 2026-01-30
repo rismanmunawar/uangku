@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { getTotalsForMonth } from "../utils/balance";
 import type { Transaction } from "../types";
 
-function buildSparkline(points: { day: string; net: number }[], width = 320, height = 120) {
+function buildSparkline(points: { day: string; Net: number }[], width = 320, height = 120) {
   if (points.length === 0) return "";
-  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.net)));
+  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.Net)));
   const step = width / Math.max(points.length - 1, 1);
   return points
     .map((p, idx) => {
       const x = idx * step;
-      const y = height / 2 - (p.net / maxAbs) * (height / 2 - 10);
+      const y = height / 2 - (p.Net / maxAbs) * (height / 2 - 10);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(" ");
@@ -55,11 +55,11 @@ export default function StatementPage() {
       .filter((t) => t.date.startsWith(selectedMonth))
       .forEach((t) => {
         const day = t.date.slice(8, 10);
-        dayMap[day] = (dayMap[day] ?? 0) + (t.type === "income" ? t.amount : -t.amount);
+        dayMap[day] = (dayMap[day] ?? 0) + (t.type === "Income" ? t.amount : -t.amount);
       });
     return Object.keys(dayMap)
       .sort()
-      .map((day) => ({ day, net: dayMap[day] }));
+      .map((day) => ({ day, Net: dayMap[day] }));
   }, [transactions, selectedMonth]);
 
   const polyline = buildSparkline(sparkPoints);
@@ -84,8 +84,8 @@ export default function StatementPage() {
       <div className="rounded-2xl bg-white p-4 shadow-sm space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="text-sm font-semibold text-slate-900">Grafik Net Harian</div>
-            <div className="text-xs text-slate-500">Pergerakan net dalam bulan terpilih</div>
+            <div className="text-sm font-semibold text-slate-900">Daily Net Graph</div>
+            <div className="text-xs text-slate-500">Net movement in the selected month</div>
           </div>
           <select
             value={selectedMonth}
@@ -102,7 +102,7 @@ export default function StatementPage() {
 
         <div className="overflow-hidden rounded-xl bg-gradient-to-b from-sky-100 to-white p-3 ring-1 ring-sky-200/60">
           {sparkPoints.length === 0 ? (
-            <div className="py-6 text-center text-sm text-slate-500">Belum ada data bulan ini.</div>
+            <div className="py-6 text-center text-sm text-slate-500">No data for this month.</div>
           ) : (
             <svg viewBox="0 0 320 120" className="h-28 w-full text-sky-500">
               <polyline
@@ -122,26 +122,26 @@ export default function StatementPage() {
         <div className="rounded-2xl bg-emerald-50 p-3.5 shadow-sm ring-1 ring-emerald-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Income</div>
           <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
-            {totals.income.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.Income.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
         <div className="rounded-2xl bg-rose-50 p-3.5 shadow-sm ring-1 ring-rose-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-rose-700">Expense</div>
           <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
-            {totals.expense.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.Expense.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
         <div className="col-span-2 rounded-2xl bg-sky-50 p-3.5 shadow-sm ring-1 ring-sky-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-700">Net</div>
           <div className="mt-1 text-2xl font-bold text-slate-900 leading-tight break-words">
-            {totals.net.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.Net.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm space-y-2">
         <div className="text-sm font-semibold text-slate-900">Export Statement</div>
-        <div className="text-xs text-slate-500">Unduh ringkasan transaksi bulan terpilih ke CSV.</div>
+        <div className="text-xs text-slate-500">Download the selected month's summary to CSV.</div>
         <button
           type="button"
           disabled={loading}
@@ -166,9 +166,10 @@ export default function StatementPage() {
           }}
           className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-soft disabled:opacity-60"
         >
-          {loading ? "Menyiapkan..." : "Export CSV Bulan Ini"}
+          {loading ? "Preparing..." : "Export CSV for this Month"}
         </button>
       </div>
     </div>
   );
 }
+

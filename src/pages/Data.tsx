@@ -1,4 +1,4 @@
-import { useAuth } from "../context/AuthContext";
+﻿import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 import { Link } from "react-router-dom";
 
@@ -7,7 +7,7 @@ export default function DataPage() {
 
   const exportCsv = async () => {
     if (!user) return;
-    const [{ data: tx }, { data: tr }] = await Promise.all([
+    const [{ Data: tx }, { Data: tr }] = await Promise.all([
       supabase.from("transactions").select("*").eq("user_id", user.id),
       supabase.from("transfers").select("*").eq("user_id", user.id),
     ]);
@@ -64,7 +64,7 @@ export default function DataPage() {
       <header className="text-base font-semibold text-slate-900">Data</header>
       <div className="rounded-2xl bg-white p-4 shadow-sm space-y-3">
         <p className="text-sm text-slate-600">
-          Ekspor data transaksi dan transfer ke CSV.
+          Export transactions and transfers to CSV.
         </p>
         <button
           type="button"
@@ -80,15 +80,16 @@ export default function DataPage() {
           Uangku Statement
         </div>
         <div className="text-xs text-slate-500">
-          Ringkasan income, expense, dan net per bulan.
+          Monthly summary of income, expense, and net.
         </div>
         <Link
-          to="/settings/data/statement"
+          to="/settings/Data/statement"
           className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-soft"
         >
-          Buka Statement
+          Open Statement
         </Link>
       </div>
     </div>
   );
 }
+

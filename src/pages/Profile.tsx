@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 export default function ProfilePage() {
@@ -9,7 +9,7 @@ export default function ProfilePage() {
 
   const saveProfile = () => {
     localStorage.setItem("displayName", displayName);
-    alert("Profil disimpan lokal. (Jika ingin sync, kita bisa buat tabel profiles)");
+    alert("Profile saved locally. (For sync, add a profiles table later)");
   };
 
   return (
@@ -40,19 +40,19 @@ export default function ProfilePage() {
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Masukkan nama"
+            placeholder="Enter name"
             className="w-full rounded-xl border border-slate-200 px-3 py-3"
           />
         </div>
         <div className="space-y-1">
           <label className="text-xs text-slate-600">Password</label>
           <input
-            value="••••••••"
+            value="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             readOnly
             className="w-full cursor-not-allowed rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-slate-500"
           />
           <p className="text-xs text-slate-500">
-            Reset password kirim email lewat Supabase Auth (belum di-hook di UI).
+            Reset Password kirim email lewat Supabase Auth (belum di-hook di UI).
           </p>
         </div>
         <div className="grid grid-cols-2 gap-2">
@@ -61,7 +61,7 @@ export default function ProfilePage() {
             onClick={saveProfile}
             className="rounded-xl bg-primary px-4 py-3 text-white shadow-soft hover:brightness-110"
           >
-            Simpan
+            Save
           </button>
           <button
             type="button"
@@ -75,3 +75,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

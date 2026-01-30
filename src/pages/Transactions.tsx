@@ -20,6 +20,7 @@ export default function TransactionsPage() {
   const [editDraft, setEditDraft] = useState<Partial<Transaction> & { password?: string }>({});
   const [saving, setSaving] = useState(false);
   const [modalError, setModalError] = useState<string | null>(null);
+  const categories = ["General", "Salary", "Food", "Transport", "Bills", "Shopping", "Transfer"];
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -320,11 +321,17 @@ export default function TransactionsPage() {
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs text-slate-600">Category</label>
-                    <input
-                      value={editDraft.category ?? ""}
+                    <select
+                      value={editDraft.category}
                       onChange={(e) => setEditDraft((d) => ({ ...d, category: e.target.value }))}
                       className="w-full rounded-xl border border-slate-200 px-3 py-2"
-                    />
+                    >
+                      {categories.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="space-y-1">

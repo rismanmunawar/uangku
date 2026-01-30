@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { Link } from "react-router-dom";
 
 export default function DataPage() {
   const { user } = useAuth();
@@ -72,6 +73,21 @@ export default function DataPage() {
         >
           Export CSV
         </button>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 shadow-sm space-y-2">
+        <div className="text-sm font-semibold text-slate-900">
+          Uangku Statement
+        </div>
+        <div className="text-xs text-slate-500">
+          Ringkasan income, expense, dan net per bulan.
+        </div>
+        <Link
+          to="/settings/data/statement"
+          className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-soft"
+        >
+          Buka Statement
+        </Link>
       </div>
     </div>
   );

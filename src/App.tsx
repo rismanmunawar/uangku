@@ -11,6 +11,7 @@ import AccountsPage from "./pages/Accounts";
 import DataPage from "./pages/Data";
 import LogoutPage from "./pages/Logout";
 import { FullScreenLoader } from "./components/FullScreenLoader";
+import StatementPage from "./pages/Statement";
 
 function Protected() {
   const { session, loading } = useAuth();
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/settings/profile" element={<ProfilePage />} />
             <Route path="/settings/accounts" element={<AccountsPage />} />
             <Route path="/settings/data" element={<DataPage />} />
+            <Route path="/settings/data/statement" element={<StatementPage />} />
             <Route path="/settings/logout" element={<LogoutPage />} />
           </Route>
         </Route>

@@ -46,12 +46,27 @@ export default function AddTransaction() {
         .order("created_at");
       setAccounts(data ?? []);
       if (!accountId && data && data.length > 0) {
-        setAccountId(data[0].id);
-        setFromAccount(data[0].id);
+        const first = data[0].id;
+        const second = data.find((a) => a.id !== first)?.id ?? "";
+        setAccountId(first);
+        setFromAccount(first);
+        setToAccount(second);
+      } else if (data && data.length > 1 && fromAccount === toAccount) {
+        const alt = data.find((a) => a.id !== fromAccount)?.id ?? "";
+        setToAccount(alt);
       }
     };
     loadAccounts();
   }, [user, accountId]);
+
+  // keep from/to different automatically when user changes "from"
+  useEffect(() => {
+    if (!fromAccount) return;
+    if (fromAccount === toAccount) {
+      const alt = accounts.find((a) => a.id !== fromAccount)?.id ?? "";
+      setToAccount(alt);
+    }
+  }, [fromAccount, toAccount, accounts]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

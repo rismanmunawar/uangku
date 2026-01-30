@@ -23,6 +23,19 @@ export default function AddTransaction() {
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
+  const resetForm = () => {
+    const first = accounts[0]?.id ?? "";
+    const second = accounts[1]?.id ?? "";
+    setDate(todayIso());
+    setAmount("");
+    setCategory("General");
+    setNote("");
+    setAdminFee("0");
+    setAccountId(first);
+    setFromAccount(first);
+    setToAccount(second && second !== first ? second : "");
+  };
+
   useEffect(() => {
     const loadAccounts = async () => {
       if (!user) return;
@@ -82,6 +95,7 @@ export default function AddTransaction() {
       }
 
       setToast("Saved successfully");
+      resetForm();
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -144,31 +158,31 @@ export default function AddTransaction() {
               </select>
             </div>
           </div>
-        <div className="space-y-1">
-          <label className="text-xs text-slate-600">Note</label>
-          <input
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Optional"
-            className="w-full rounded-xl border border-slate-200 px-3 py-3"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-xs text-slate-600">Admin fee</label>
-          <input
-            inputMode="decimal"
-            value={adminFee}
-            onChange={(e) => setAdminFee(e.target.value)}
-            placeholder="0"
-            className="w-full rounded-xl border border-slate-200 px-3 py-3"
-          />
-          <p className="text-[11px] text-slate-500">
-            Fee will be deducted from the source account.
-          </p>
-        </div>
-      </>
-    );
-  }
+          <div className="space-y-1">
+            <label className="text-xs text-slate-600">Note</label>
+            <input
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Optional"
+              className="w-full rounded-xl border border-slate-200 px-3 py-3"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-slate-600">Admin fee</label>
+            <input
+              inputMode="decimal"
+              value={adminFee}
+              onChange={(e) => setAdminFee(e.target.value)}
+              placeholder="0"
+              className="w-full rounded-xl border border-slate-200 px-3 py-3"
+            />
+            <p className="text-[11px] text-slate-500">
+              Fee will be deducted from the source account.
+            </p>
+          </div>
+        </>
+      );
+    }
 
     return (
       <>
@@ -243,7 +257,7 @@ export default function AddTransaction() {
             className="float-right text-xs font-semibold text-emerald-600"
             onClick={() => setToast(null)}
           >
-            ✕
+            x
           </button>
         </div>
       )}

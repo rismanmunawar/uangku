@@ -7,6 +7,7 @@ type TransactionLike =
       item: Transfer;
       fromName?: string;
       toName?: string;
+      onSelect?: () => void;
     };
 
 const colorPalette = {
@@ -17,7 +18,7 @@ const colorPalette = {
   transfer: "bg-orange-100 text-orange-600",
 };
 
-export function TransactionItem(props: TransactionLike) {
+export function TransactionItem(props: TransactionLike & { onSelect?: () => void }) {
   const formatDateTime = (iso: string) =>
     new Date(iso).toLocaleString("id-ID", {
       day: "2-digit",
@@ -34,7 +35,10 @@ export function TransactionItem(props: TransactionLike) {
       item.type === "income" ? "text-emerald-600" : "text-rose-600";
     const sign = item.type === "income" ? "+" : "-";
     return (
-      <li className="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-100">
+      <li
+        className="flex cursor-pointer items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-[1px] hover:shadow-md"
+        onClick={props.onSelect}
+      >
         <div className="flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${
@@ -75,7 +79,10 @@ export function TransactionItem(props: TransactionLike) {
   const { item, fromName, toName } = props;
   const isOut = props.kind === "transferOut";
   return (
-    <li className="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm">
+    <li
+      className="flex cursor-pointer items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm transition hover:-translate-y-[1px] hover:shadow-md"
+      onClick={props.onSelect}
+    >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-orange-600">
           {"<->"}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import type { Account, Transaction, Transfer } from "../types";
 import { AccountCard } from "../components/AccountCard";
@@ -246,12 +247,12 @@ export default function Home() {
             <div className="text-base font-semibold text-slate-900">Activity</div>
             <div className="text-xs text-slate-500">View full history and filters</div>
           </div>
-          <a
-            href="/transactions"
+          <Link
+            to="/transactions"
             className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-soft"
           >
             Open
-          </a>
+          </Link>
         </div>
       </section>
     </div>

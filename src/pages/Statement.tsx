@@ -119,21 +119,21 @@ export default function StatementPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Income</div>
-          <div className="mt-1 text-2xl font-bold text-slate-900">
+        <div className="rounded-2xl bg-emerald-50 p-3.5 shadow-sm ring-1 ring-emerald-100">
+          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Income</div>
+          <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
             {totals.income.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
-        <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wide text-rose-600">Expense</div>
-          <div className="mt-1 text-2xl font-bold text-slate-900">
+        <div className="rounded-2xl bg-rose-50 p-3.5 shadow-sm ring-1 ring-rose-100">
+          <div className="text-xs font-semibold uppercase tracking-wide text-rose-700">Expense</div>
+          <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
             {totals.expense.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
-        <div className="col-span-2 rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wide text-slate-600">Net</div>
-          <div className="mt-1 text-3xl font-bold text-slate-900">
+        <div className="col-span-2 rounded-2xl bg-sky-50 p-3.5 shadow-sm ring-1 ring-sky-100">
+          <div className="text-xs font-semibold uppercase tracking-wide text-slate-700">Net</div>
+          <div className="mt-1 text-2xl font-bold text-slate-900 leading-tight break-words">
             {totals.net.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>

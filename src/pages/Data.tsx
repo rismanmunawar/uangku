@@ -7,7 +7,7 @@ export default function DataPage() {
 
   const exportCsv = async () => {
     if (!user) return;
-    const [{ Data: tx }, { Data: tr }] = await Promise.all([
+    const [{ data: tx }, { data: tr }] = await Promise.all([
       supabase.from("transactions").select("*").eq("user_id", user.id),
       supabase.from("transfers").select("*").eq("user_id", user.id),
     ]);
@@ -83,7 +83,7 @@ export default function DataPage() {
           Monthly summary of income, expense, and net.
         </div>
         <Link
-          to="/settings/Data/statement"
+          to="/settings/data/statement"
           className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-soft"
         >
           Open Statement

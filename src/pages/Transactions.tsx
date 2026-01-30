@@ -301,7 +301,7 @@ export default function TransactionsPage() {
                   <input
                     inputMode="decimal"
                     value={editDraft.amount ?? ""}
-                    onChange={(e) => setEditDraft((d) => ({ ...d, amount: e.target.value }))}
+                    onChange={(e) => setEditDraft((d) => ({ ...d, amount: Number(e.target.value) || 0 }))}
                     className="w-full rounded-xl border border-slate-200 px-3 py-2"
                   />
                 </div>

@@ -5,14 +5,14 @@ import { useAuth } from "../context/AuthContext";
 import { getTotalsForMonth } from "../utils/balance";
 import type { Transaction } from "../types";
 
-function buildSparkline(points: { day: string; Net: number }[], width = 320, height = 120) {
+function buildSparkline(points: { day: string; net: number }[], width = 320, height = 120) {
   if (points.length === 0) return "";
-  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.Net)));
+  const maxAbs = Math.max(1, ...points.map((p) => Math.abs(p.net)));
   const step = width / Math.max(points.length - 1, 1);
   return points
     .map((p, idx) => {
       const x = idx * step;
-      const y = height / 2 - (p.Net / maxAbs) * (height / 2 - 10);
+      const y = height / 2 - (p.net / maxAbs) * (height / 2 - 10);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(" ");
@@ -55,11 +55,11 @@ export default function StatementPage() {
       .filter((t) => t.date.startsWith(selectedMonth))
       .forEach((t) => {
         const day = t.date.slice(8, 10);
-        dayMap[day] = (dayMap[day] ?? 0) + (t.type === "Income" ? t.amount : -t.amount);
+        dayMap[day] = (dayMap[day] ?? 0) + (t.type === "income" ? t.amount : -t.amount);
       });
     return Object.keys(dayMap)
       .sort()
-      .map((day) => ({ day, Net: dayMap[day] }));
+      .map((day) => ({ day, net: dayMap[day] }));
   }, [transactions, selectedMonth]);
 
   const polyline = buildSparkline(sparkPoints);
@@ -122,19 +122,19 @@ export default function StatementPage() {
         <div className="rounded-2xl bg-emerald-50 p-3.5 shadow-sm ring-1 ring-emerald-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Income</div>
           <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
-            {totals.Income.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.income.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
         <div className="rounded-2xl bg-rose-50 p-3.5 shadow-sm ring-1 ring-rose-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-rose-700">Expense</div>
           <div className="mt-1 text-xl font-bold text-slate-900 leading-tight break-words">
-            {totals.Expense.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.expense.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
         <div className="col-span-2 rounded-2xl bg-sky-50 p-3.5 shadow-sm ring-1 ring-sky-100">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-700">Net</div>
           <div className="mt-1 text-2xl font-bold text-slate-900 leading-tight break-words">
-            {totals.Net.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+            {totals.net.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
           </div>
         </div>
       </div>

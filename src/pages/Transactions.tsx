@@ -103,18 +103,20 @@ export default function TransactionsPage() {
       .sort((a, b) => {
         const da =
           a.kind === "transaction"
-            ? new Date(a.item.created_at ?? a.item.date).getTime()
-            : new Date(a.item.created_at ?? a.item.date).getTime();
+            ? new Date(a.item.date).getTime()
+            : new Date(a.item.date).getTime();
         const db =
           b.kind === "transaction"
-            ? new Date(b.item.created_at ?? b.item.date).getTime()
-            : new Date(b.item.created_at ?? b.item.date).getTime();
+            ? new Date(b.item.date).getTime()
+            : new Date(b.item.date).getTime();
         return db - da;
       });
   }, [combinedList, month, accountId]);
 
   const accountName = (id: string) =>
     accounts.find((a) => a.id === id)?.name ?? "Account";
+
+  const [toast, setToast] = useState<{ kind: "success" | "error"; message: string } | null>(null);
 
   const openTransaction = (item: Transaction) => {
     setSelected({ kind: "transaction", item });
@@ -166,6 +168,7 @@ export default function TransactionsPage() {
       if (updErr) throw updErr;
 
       await fetchData();
+      setToast({ kind: "success", message: "Transaction updated." });
       setSelected(null);
     } catch (err) {
       setModalError((err as Error).message);
@@ -180,6 +183,23 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-3 p-4 pb-24">
+      {toast && (
+        <div
+          className={`fixed left-1/2 top-4 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-xl px-4 py-3 text-sm shadow-lg ${
+            toast.kind === "success"
+              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              : "bg-rose-50 text-rose-700 border border-rose-200"
+          }`}
+        >
+          {toast.message}
+          <button
+            className="float-right text-xs font-semibold text-slate-500"
+            onClick={() => setToast(null)}
+          >
+            ×
+          </button>
+        </div>
+      )}
       <div className="text-lg font-semibold text-slate-900">Activity</div>
       <div className="grid grid-cols-2 gap-3 rounded-2xl bg-white p-3 shadow-sm">
         <div className="space-y-1">

@@ -57,22 +57,32 @@ export default function StatementPage() {
   const totals = useMemo(() => getTotalsForMonth(transactions, selectedMonth), [transactions, selectedMonth]);
 
   const { incomePoints, expensePoints, netPoints, maxAbs } = useMemo(() => {
-    const dayIncome: Record<string, number> = {};
-    const dayExpense: Record<string, number> = {};
+    const [year, monthNum] = selectedMonth.split("-").map(Number);
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const dayIncome: Record<number, number> = {};
+    const dayExpense: Record<number, number> = {};
     transactions
       .filter((t) => t.date.startsWith(selectedMonth))
       .forEach((t) => {
-        const day = t.date.slice(8, 10);
+        const day = Number(t.date.slice(8, 10));
         if (t.type === "income") {
           dayIncome[day] = (dayIncome[day] ?? 0) + t.amount;
         } else {
           dayExpense[day] = (dayExpense[day] ?? 0) + t.amount;
         }
       });
-    const days = Array.from(new Set([...Object.keys(dayIncome), ...Object.keys(dayExpense)])).sort();
-    const incomePts = days.map((d) => ({ day: d, value: dayIncome[d] ?? 0 }));
-    const expensePts = days.map((d) => ({ day: d, value: -(dayExpense[d] ?? 0) }));
-    const netPts = days.map((d) => ({ day: d, value: (dayIncome[d] ?? 0) - (dayExpense[d] ?? 0) }));
+    const incomePts: Point[] = [];
+    const expensePts: Point[] = [];
+    const netPts: Point[] = [];
+    let cumIncome = 0;
+    let cumExpense = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      cumIncome += dayIncome[d] ?? 0;
+      cumExpense += dayExpense[d] ?? 0;
+      incomePts.push({ day: String(d).padStart(2, "0"), value: cumIncome });
+      expensePts.push({ day: String(d).padStart(2, "0"), value: -cumExpense });
+      netPts.push({ day: String(d).padStart(2, "0"), value: cumIncome - cumExpense });
+    }
     const allVals = [...incomePts, ...expensePts, ...netPts].map((p) => Math.abs(p.value));
     return { incomePoints: incomePts, expensePoints: expensePts, netPoints: netPts, maxAbs: Math.max(1, ...allVals) };
   }, [transactions, selectedMonth]);

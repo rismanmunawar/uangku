@@ -34,6 +34,7 @@ export function TransactionItem(props: TransactionLike & { onSelect?: () => void
     const color =
       item.type === "income" ? "text-emerald-600" : "text-rose-600";
     const sign = item.type === "income" ? "+" : "-";
+    const displayDate = item.date; // trust the editable date field
     return (
       <li
         className="flex cursor-pointer items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-[1px] hover:shadow-md"
@@ -56,9 +57,7 @@ export function TransactionItem(props: TransactionLike & { onSelect?: () => void
                 </span>
               )}
             </div>
-            <div className="text-xs text-slate-500">
-              {formatDateTime(item.created_at ?? item.date)}
-            </div>
+            <div className="text-xs text-slate-500">{displayDate}</div>
             {item.note && (
               <div className="text-xs text-slate-500">{item.note}</div>
             )}
